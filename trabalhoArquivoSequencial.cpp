@@ -61,6 +61,8 @@ void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], in
 void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct cidade vetorCidades[], int qtdRegistrosCidade);
 bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont);
 void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, struct aluno A[], int &contA);
+void leituraExclusaoAluno(int TExclusao[], int &contTExclusao, struct aluno alunos[], int qtdRegistrosAluno);
+void exclusaoAluno(struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA);
 
 int main() {
     int opcao;
@@ -87,7 +89,7 @@ int main() {
     int contTAluno = 0;
     aluno SAluno[TAMAX];
     int contSAluno = 0;
-    
+    int TExclusao[TAMAX], contTExclusao = 0;    
     
     
     
@@ -220,7 +222,8 @@ int main() {
             do {
 
                 cout << "1. Incluir Alunos" << endl;
-                cout << "2. Voltar" << endl;
+                cout << "2. Excluir Alunos" << endl;
+                cout << "3. Voltar" << endl;
                 cout << "\nEscolha uma operacao: ";
                 cin >> operacaoAluno;
 
@@ -244,6 +247,19 @@ int main() {
 
                     break;
                 case 2:
+                	
+                	cout << "\nDigite os *CODIGOS* dos cadastros a serem excluidos\n";
+                    leituraExclusaoAluno(TExclusao, contTExclusao, alunos, qtdRegistrosAluno);
+                    exclusaoAluno(SAluno, contSAluno, TExclusao, contTAluno, alunos, qtdRegistrosAluno);
+
+                    for (int i = 0; i < qtdRegistrosAluno; i++) {
+                        SAluno[i].codigo = alunos[i].codigo;
+                        SAluno[i].nome = alunos[i].nome;
+                        SAluno[i].endereco = alunos[i].endereco;
+                        SAluno[i].codigoCidade = alunos[i].codigoCidade;
+                    }
+
+                    contSAluno = qtdRegistrosAluno;
 
                     break;
                 default:
@@ -252,7 +268,7 @@ int main() {
 
                     break;
                 }
-            } while (operacaoAluno != 2);
+            } while (operacaoAluno != 3);
             break;
         case 5:
             cout << "Saindo do programa..." << endl;
@@ -304,6 +320,26 @@ bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont) {
     int i = 0;
     for (; i < cont; i++) {
         if (cod == vetorAluno[i].codigo) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int buscaSerialAluno2(aluno vetorAluno[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == vetorAluno[i].codigo) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+bool buscaSerialExclusaoAluno(int TExclusao[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == TExclusao[i]) {
             return false;
         }
     }
@@ -388,7 +424,7 @@ void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor 
                 y = -1;
 
             } else
-                cout << "\nCodigo repetido. Tente digitar outro codigo\n";
+                cout << "\nCodigo repetido. Tente digitar outro codigo\n" << endl;
 
         }
     }
@@ -469,7 +505,7 @@ void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[
                 y = -1;
 
             } else
-                cout << "\nCodigo repetido. Tente digitar outro codigo\n";
+                cout << "\nCodigo repetido. Tente digitar outro codigo\n" << endl;
 
         }
     }
@@ -515,4 +551,72 @@ void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, str
     }
     contA = k;
 
+}
+
+void leituraExclusaoAluno(int TExclusao[], int &contTExclusao, struct aluno alunos[], int qtdRegistrosAluno){
+
+
+	int i = 0;
+
+    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+        for (int y = 1; y != -1;) {
+            cout << "Codigo: ";
+            cin >> TExclusao[i];
+
+            if (buscaSerialExclusaoAluno(TExclusao, TExclusao[i], i)) {
+                if (TExclusao[i] > 0) {
+                	if(buscaSerialAluno2(alunos, TExclusao[i], qtdRegistrosAluno) != -1){
+                		
+        				cout << "\n\n**Registro encontrado**" << endl;
+        				cout << "Codigo: " << alunos[i].codigo << endl;
+        				cout << "Nome: " << alunos[i].nome << endl;
+        				cout << "Endereco: " << alunos[i].endereco << endl;
+        				cout << "Codigo_cidade: " << alunos[i].codigoCidade << endl;
+        				
+        				continue;
+                		
+					}else cout << "\nRegistro nao encontrado, tente novamente."<< endl;
+					continue;
+
+                } else
+               	 	y = -1;
+                	saida = -1;
+                	break;
+                
+            } else
+                cout << "\nCodigo repetido. Tente digitar outro codigo\n" << endl;
+                continue;
+
+        }
+    }
+
+    if (i == TAMAX) {
+        contTExclusao = i;
+    } else
+        contTExclusao = i - 1;
+}
+
+void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA){
+    int i = 0, j = 0, k = 0; // i (contador de S) j (contador de T) k (contador de A)
+    for (;j < contT; i++){
+        if (S[i].codigo != T[j]){
+            A[k].codigo = S[i].codigo;
+            A[k].nome = S[i].nome;
+            A[k].endereco = S[i].endereco;
+            A[k].codigoCidade = S[i].codigoCidade;
+            k++;
+            }
+        else {
+            j++;
+        }
+    }
+    while (i < contS){
+        A[k].codigo = S[i].codigo;
+        A[k].nome = S[i].nome;
+        A[k].endereco = S[i].endereco;
+        A[k].codigoCidade = S[i].codigoCidade;
+        i++;
+        k++;
+    }
+    contA = k;
 }
