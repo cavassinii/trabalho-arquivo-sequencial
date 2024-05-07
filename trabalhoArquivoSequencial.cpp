@@ -49,20 +49,30 @@ struct matricula {
     float valorTotal;
 };
 
+//FUN합ES TABELA CIDADE
 void leituraCidade(struct cidade v[], int &qtdRegistros);
 int buscaSerialCidade(cidade vetorCidade[], int cod, int qtdCidades);
 
+//FUN합ES TABELA CURSO
 void leituraCurso(struct curso v[], int &qtdRegistros);
 
+//FUN합ES TABELA INSTRUTOR
 void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade);
 int buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod);
 void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], int contT, struct instrutor A[], int &contA);
 
+
+//FUN합ES TABELA ALUNO
 void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct cidade vetorCidades[], int qtdRegistrosCidade);
 bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont);
 void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, struct aluno A[], int &contA);
-void leituraExclusaoAluno(int TExclusao[], int &contTExclusao, struct aluno alunos[], int qtdRegistrosAluno);
-void exclusaoAluno(struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA);
+void leituraExclusaoAluno(int TExclusao[], int &contTExclusao);
+void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA);
+
+//FUN합ES TABELA TURMA
+void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade);
+
+
 
 int main() {
     int opcao;
@@ -89,7 +99,10 @@ int main() {
     int contTAluno = 0;
     aluno SAluno[TAMAX];
     int contSAluno = 0;
-    int TExclusao[TAMAX], contTExclusao = 0;    
+    int TExclusao[TAMAX], contTExclusao = 0;   
+	
+	//VARIAVEIS TURMA
+	 
     
     
     
@@ -248,20 +261,25 @@ int main() {
                     break;
                 case 2:
                 	
-                	cout << "\nDigite os *CODIGOS* dos cadastros a serem excluidos\n";
-                    leituraExclusaoAluno(TExclusao, contTExclusao, alunos, qtdRegistrosAluno);
-                    exclusaoAluno(SAluno, contSAluno, TExclusao, contTAluno, alunos, qtdRegistrosAluno);
-
-                    for (int i = 0; i < qtdRegistrosAluno; i++) {
+                	cout << "\nDigite os codigos dos cadastros a serem excluidos" << endl;
+                	leituraExclusaoAluno(TExclusao, contTExclusao);
+                	exclusaoAluno(SAluno, contSAluno, TExclusao, contTExclusao, alunos, qtdRegistrosAluno);
+                	
+                	 for (int i = 0; i < qtdRegistrosAluno; i++) {
                         SAluno[i].codigo = alunos[i].codigo;
                         SAluno[i].nome = alunos[i].nome;
                         SAluno[i].endereco = alunos[i].endereco;
                         SAluno[i].codigoCidade = alunos[i].codigoCidade;
                     }
-
-                    contSAluno = qtdRegistrosAluno;
-
+                	
+                	contSAluno = qtdRegistrosAluno;
+                	
+                	system("cls");
+        
                     break;
+                case 3:
+                	
+                	break;
                 default:
                 	system("cls");
                     cout << "Opcao invalida, tente novamente.\n" << endl;
@@ -269,9 +287,25 @@ int main() {
                     break;
                 }
             } while (operacaoAluno != 3);
+            
             break;
         case 5:
-            cout << "Saindo do programa..." << endl;
+            int operacaoTurma;
+            
+            system("cls");
+            
+			do {
+				cout << "1. Leitura de Turmas" << endl;
+				cout << "2. Voltar" << endl;
+				cout << "Escolha uma operacao";
+				
+				switch(operacaoTurma){
+				case 1: 
+					leituraTurma()
+						
+				}
+			}
+            
             break;
         case 6:
             cout << "Saindo do programa..." << endl;
@@ -297,13 +331,64 @@ int main() {
 }
 
 int buscaSerialCidade(cidade vetorCidade[], int cod, int qtdCidades) {
-    int i = 0;
+    /*int i = 0;
     for (; i < qtdCidades; i++) {
         if (cod == vetorCidade[i].codigo) {
             return i;
         }
     }
-    return -1;
+    return -1;*/
+    
+    int i = 0, f = qtdCidades - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetorCidade[m].codigo; m = (i + f) / 2){
+        if (cod > vetorCidade[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if (cod == vetorCidade[m].codigo){
+      return m;
+    }
+    else
+       return -1;
+
+}
+
+int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos) {
+ 
+    int i = 0, f = qtdCursos - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetorCurso[m].codigo; m = (i + f) / 2){
+        if (cod > vetorCurso[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if (cod == vetorCurso[m].codigo){
+      return m;
+    }
+    else
+       return -1;
+
+}
+
+int buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod, int qtdInstrutores){
+    
+    int i = 0, f = qtdInstrutores - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetorInstrutor[m].codigo; m = (i + f) / 2){
+        if (cod > vetorInstrutor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if (cod == vetorInstrutor[m].codigo){
+      return m;
+    }
+    else
+       return -1;
+
 }
 
 bool buscaSerialInstrutor(instrutor vetorInstrutor[], int cod, int cont) {
@@ -326,14 +411,14 @@ bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont) {
     return true;
 }
 
-int buscaSerialAluno2(aluno vetorAluno[], int cod, int cont) {
+bool buscaSerialTurma(turma vetorTurma[], int cod, int cont) {
     int i = 0;
     for (; i < cont; i++) {
-        if (cod == vetorAluno[i].codigo) {
-            return i;
+        if (cod == vetorTurma[i].codigo) {
+            return false;
         }
     }
-    return -1;
+    return true;
 }
 
 bool buscaSerialExclusaoAluno(int TExclusao[], int cod, int cont) {
@@ -553,41 +638,17 @@ void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, str
 
 }
 
-void leituraExclusaoAluno(int TExclusao[], int &contTExclusao, struct aluno alunos[], int qtdRegistrosAluno){
-
-
+void leituraExclusaoAluno(int TExclusao[], int &contTExclusao){
 	int i = 0;
 
     for (int saida = 1; i < TAMAX && saida == 1; i++) {
-        for (int y = 1; y != -1;) {
-            cout << "Codigo: ";
+            cout << "Codigo para exclusao: ";
             cin >> TExclusao[i];
+            cin.ignore();
+            if(TExclusao[i] == 0){
+            	saida = -1;
+			}
 
-            if (buscaSerialExclusaoAluno(TExclusao, TExclusao[i], i)) {
-                if (TExclusao[i] > 0) {
-                	if(buscaSerialAluno2(alunos, TExclusao[i], qtdRegistrosAluno) != -1){
-                		
-        				cout << "\n\n**Registro encontrado**" << endl;
-        				cout << "Codigo: " << alunos[i].codigo << endl;
-        				cout << "Nome: " << alunos[i].nome << endl;
-        				cout << "Endereco: " << alunos[i].endereco << endl;
-        				cout << "Codigo_cidade: " << alunos[i].codigoCidade << endl;
-        				
-        				continue;
-                		
-					}else cout << "\nRegistro nao encontrado, tente novamente."<< endl;
-					continue;
-
-                } else
-               	 	y = -1;
-                	saida = -1;
-                	break;
-                
-            } else
-                cout << "\nCodigo repetido. Tente digitar outro codigo\n" << endl;
-                continue;
-
-        }
     }
 
     if (i == TAMAX) {
@@ -620,3 +681,96 @@ void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct alun
     }
     contA = k;
 }
+
+void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade) {
+    int i = 0;
+
+    cout << "\nCadastro de Turmas\n";
+    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+        for (int y = 1; y != -1;) {
+            cout << "Codigo: ";
+            cin >> v[i].codigo;
+            cin.ignore();
+
+            if (buscaSerialTurma(v, v[i].codigo, i) && buscaSerialTurma(vetorTurmas, v[i].codigo, qtdRegistrosTurma)) {
+                if (v[i].codigo > 0) {
+                	for(; y != -1;){
+					
+                    cout << "Codigo do curso: ";
+                    cin >> v[i].codigoCurso;
+                    
+                    int resultBusca = buscaBinariaCurso(vetorCursos, v[i].codigoCurso, qtdRegistrosCurso);
+                    if(resultBusca != -1){
+                    	cout << vetorCursos[resultBusca].descricao << " " << vetorCursos[resultBusca].valorAula;
+                    	y = -1;
+					}else cout << "\nCodigo do curso nao encontrado, tente novamente.";
+                } 
+                	
+                	for(y = 1; y != -1;){
+                		cout << "Codigo do instrutor: ";
+                    	cin >> v[i].codigoInstrutor;
+                    	
+                    	int resultBusca = buscaBinariaInstrutor(vetorInstrutores, v[i].codigoInstrutor, qtdRegistrosInstrutor);
+                    	if(resultBusca != -1){
+                    		cout << vetorInstrutores[resultBusca].nome << " " << vetorCidades[vetorInstrutores[resultBusca].codigoCidade].nome;
+                    		y = -1;
+						}else cout << "\nCodigo do instrutor nao encontrado, tente novamente.";
+					}
+
+                    cout << "Total de participantes: ";
+                    cin >> v[i].totalParticipantes;
+                    cout << "Quantidade maxima de participantes: ";
+                    cin >> v[i].quantMaxParticipantes;
+
+                } else
+                    saida = -1;
+                y = -1;
+
+            } else
+                cout << "\nCodigo repetido. Tente digitar outro codigo\n" << endl;
+
+        }
+    }
+
+    if (i == TAMAX) {
+        qtdRegistros = i;
+    } else
+        qtdRegistros = i - 1;
+}
+
+/*void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], int contT, struct instrutor A[], int &contA) {
+    int i = 0, j = 0, k = 0; // i (contador de S) j (contador de T) k (contador de A)
+    for (; i < contS && j < contT; k++) {
+        if (S[i].codigo < T[j].codigo) {
+            A[k].codigo = S[i].codigo;
+            A[k].nome = S[i].nome;
+            A[k].endereco = S[i].endereco;
+            A[k].codigoCidade = S[i].codigoCidade;
+            i++;
+        } else {
+            A[k].codigo = T[j].codigo;
+            A[k].nome = T[j].nome;
+            A[k].endereco = T[j].endereco;
+            A[k].codigoCidade = T[j].codigoCidade;
+            j++;
+        }
+    }
+    while (i < contS) {
+        A[k].codigo = S[i].codigo;
+        A[k].nome = S[i].nome;
+        A[k].endereco = S[i].endereco;
+        A[k].codigoCidade = S[i].codigoCidade;
+        i++;
+        k++;
+    }
+    while (j < contT) {
+        A[k].codigo = T[j].codigo;
+        A[k].nome = T[j].nome;
+        A[k].endereco = T[j].endereco;
+        A[k].codigoCidade = T[j].codigoCidade;
+        j++;
+        k++;
+    }
+    contA = k;
+
+}*/
