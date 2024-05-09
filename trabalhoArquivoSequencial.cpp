@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#define TAMAX 3
+#define TAMAX 10
 
 struct cidade {
     int codigo;
@@ -52,14 +52,17 @@ struct matricula {
 //FUNÇÕES TABELA CIDADE
 void leituraCidade(struct cidade v[], int &qtdRegistros);
 int buscaSerialCidade(cidade vetorCidade[], int cod, int qtdCidades);
+void mostrarCidades(cidade vetor[], int qtdRegistros);
 
 //FUNÇÕES TABELA CURSO
 void leituraCurso(struct curso v[], int &qtdRegistros);
+void mostrarCursos(curso vetor[], int qtdRegistros);
 
 //FUNÇÕES TABELA INSTRUTOR
 void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade);
 int buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod);
 void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], int contT, struct instrutor A[], int &contA);
+void mostrarInstrutores(instrutor vetor[], int qtdRegistros);
 
 
 //FUNÇÕES TABELA ALUNO
@@ -68,11 +71,12 @@ bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont);
 void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, struct aluno A[], int &contA);
 void leituraExclusaoAluno(int TExclusao[], int &contTExclusao);
 void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA);
+void mostrarAlunos(aluno vetor[], int qtdRegistros);
 
 //FUNÇÕES TABELA TURMA
 void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade);
 void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, struct turma A[], int &contA);
-
+void mostrarTurmas(turma vetor[], int qtdRegistros);
 
 
 int main() {
@@ -145,7 +149,8 @@ int main() {
             do {
 
                 cout << "1. Leitura de Cidades" << endl;
-                cout << "2. Voltar" << endl;
+                cout << "2. Mostrar Cidades" << endl;
+                cout << "3. Voltar" << endl;
                 cout << "\nEscolha uma operacao: ";
                 cin >> operacaoCidade;
 
@@ -157,21 +162,29 @@ int main() {
 
                     break;
                 case 2:
+                	mostrarCidades(cidades, qtdRegistrosCidade);
+                	
+                	cout << "Precione enter para continuar";
+                	getch();
+                	system("cls");
                     break;
+                case 3:
+                	break;
                 default:
                 	system("cls");
                     cout << "Opcao invalida, tente novamente.\n" << endl;
                     
                     break;
                 }
-            } while (operacaoCidade != 2);
+            } while (operacaoCidade != 3);
             break;
         case 2:
             int operacaoCurso;  	
             system("cls");
             do{
             	cout << "1. Leitura de Cursos" << endl;
-            	cout << "2. Voltar" << endl;
+            	cout << "2. Mostrar Cursos" << endl;
+            	cout << "3. Voltar" << endl;
             	cout << "\nEscolha uma operacao: ";
             	cin >> (operacaoCurso);
             	
@@ -183,6 +196,14 @@ int main() {
             		
             		break;
             	case 2:
+            		mostrarCursos(cursos, qtdRegistrosCurso);
+                	
+                	cout << "Precione enter para continuar";
+                	getch();
+                	system("cls");
+            
+            		break;
+            	case 3:
             		break;
             	default:
             		system("cls");
@@ -190,7 +211,7 @@ int main() {
             		
             		break;
 				}
-			} while (operacaoCurso != 2);
+			} while (operacaoCurso != 3);
             break;
         case 3:
             int operacaoInstrutor;
@@ -199,7 +220,8 @@ int main() {
             do {
 
                 cout << "1. Incluir Instrutores" << endl;
-                cout << "2. Voltar" << endl;
+                cout << "2. Mostrar Instrutores" << endl;
+                cout << "3. Voltar" << endl;
                 cout << "\nEscolha uma operacao: ";
                 cin >> operacaoInstrutor;
 
@@ -223,15 +245,22 @@ int main() {
 
                     break;
                 case 2:
+                	mostrarInstrutores(instrutores, qtdRegistrosInstrutor);
+                	
+                	cout << "Precione enter para continuar";
+                	getch();
+                	system("cls");
 
                     break;
+                case 3:
+                	break;
                 default:
                 	system("cls");
                     cout << "Opcao invalida, tente novamente.\n" << endl;
 
                     break;
                 }
-            } while (operacaoInstrutor != 2);
+            } while (operacaoInstrutor != 3);
 
             break;
         case 4:
@@ -242,7 +271,8 @@ int main() {
 
                 cout << "1. Incluir Alunos" << endl;
                 cout << "2. Excluir Alunos" << endl;
-                cout << "3. Voltar" << endl;
+                cout << "3. Mostrar Alunos" << endl;
+                cout << "4. Voltar" << endl;
                 cout << "\nEscolha uma operacao: ";
                 cin >> operacaoAluno;
 
@@ -285,6 +315,14 @@ int main() {
                     break;
                 case 3:
                 	
+                	mostrarAlunos(alunos, qtdRegistrosAluno);
+                	
+                	cout << "Precione enter para continuar";
+                	getch();
+                	system("cls");
+                	
+                	break;
+                case 4:
                 	break;
                 default:
                 	system("cls");
@@ -292,7 +330,7 @@ int main() {
 
                     break;
                 }
-            } while (operacaoAluno != 3);
+            } while (operacaoAluno != 4);
             
             break;
         case 5:
@@ -302,7 +340,8 @@ int main() {
             
 			do {
 				cout << "1. Incluir Turmas" << endl;
-				cout << "2. Voltar" << endl;
+				cout << "2. Mostrar Turmas" << endl;
+				cout << "3. Voltar" << endl;
 				cout << "\nEscolha uma operacao: ";
 				cin >> operacaoTurma;
 				
@@ -328,13 +367,21 @@ int main() {
 				
 				case 2:
 					
+                	mostrarTurmas(turmas, qtdRegistrosTurma);
+                	
+                	cout << "Precione enter para continuar";
+                	getch();
+                	system("cls");
+					
+					break;
+				case 3:
 					break;
 				default:
 					system("cls");
 					cout << "Opcao invalida, tente novamente.\n" << endl;
 					
 				}
-			} while (operacaoTurma != 2);
+			} while (operacaoTurma != 3);
             
             break;
         case 6:
@@ -646,6 +693,7 @@ void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[
         qtdRegistros = i;
     } else
         qtdRegistros = i - 1;
+        
 }
 
 void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, struct aluno A[], int &contA){
@@ -740,7 +788,7 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
             
 
             if (buscaSerialTurma(v, v[i].codigo, i) && buscaSerialTurma(vetorTurmas, v[i].codigo, qtdRegistrosTurma)) {
-                if (v[i].codigo > 0) {
+                if (v[i].codigo != 0) {
                 	for(; y != -1;){
 					
                     cout << "Codigo do curso: ";
@@ -791,6 +839,7 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
         qtdRegistros = i;
     } else
         qtdRegistros = i - 1;
+        
 }
 
 void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, struct turma A[], int &contA) {
@@ -831,4 +880,67 @@ void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, str
         k++;
     }
     contA = k;
+    
 }
+
+//FUNÇÕES MOSTRAR
+
+void mostrarCidades(cidade vetorCidades[], int qtdCidades) {
+    cout << "=== CIDADES ===" << endl;
+    for (int i = 0; i < qtdCidades; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorCidades[i].codigo << endl;
+        cout << "Nome: " << vetorCidades[i].nome << endl;
+        cout << "UF: " << vetorCidades[i].uf << endl;
+        cout << endl;
+    }
+}
+
+void mostrarCursos(curso vetorCursos[], int qtdCursos) {
+    cout << "=== CURSOS ===" << endl;
+    for (int i = 0; i < qtdCursos; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorCursos[i].codigo << endl;
+        cout << "Descrição: " << vetorCursos[i].descricao << endl;
+        cout << "Valor por aula: R$" << vetorCursos[i].valorAula << endl;
+        cout << endl;
+    }
+}
+
+void mostrarInstrutores(instrutor vetorInstrutores[], int qtdInstrutores) {
+    cout << "=== INSTRUTORES ===" << endl;
+    for (int i = 0; i < qtdInstrutores; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorInstrutores[i].codigo << endl;
+        cout << "Nome: " << vetorInstrutores[i].nome << endl;
+        cout << "Endereço: " << vetorInstrutores[i].endereco << endl;
+        cout << "Codigo da Cidade: " << vetorInstrutores[i].codigoCidade << endl;
+        cout << endl;
+    }
+}
+
+void mostrarAlunos(aluno vetorAlunos[], int qtdAlunos) {
+    cout << "=== ALUNOS ===" << endl;
+    for (int i = 0; i < qtdAlunos; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorAlunos[i].codigo << endl;
+        cout << "Nome: " << vetorAlunos[i].nome << endl;
+        cout << "Endereço: " << vetorAlunos[i].endereco << endl;
+        cout << "Codigo da Cidade: " << vetorAlunos[i].codigoCidade << endl;
+        cout << endl;
+    }
+}
+
+void mostrarTurmas(turma vetorTurmas[], int qtdTurmas) {
+    cout << "=== TURMAS ===" << endl;
+    for (int i = 0; i < qtdTurmas; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorTurmas[i].codigo << endl;
+        cout << "Codigo do Curso: " << vetorTurmas[i].codigoCurso << endl;
+        cout << "Codigo do Instrutor: " << vetorTurmas[i].codigoInstrutor << endl;
+        cout << "Total de Participantes: " << vetorTurmas[i].totalParticipantes << endl;
+        cout << "Quantidade Máxima de Participantes: " << vetorTurmas[i].quantMaxParticipantes << endl;
+        cout << endl;
+    }
+}
+
