@@ -462,8 +462,37 @@ int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos) {
 
 }
 
-int buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod, int qtdInstrutores){
+int buscaBinariaAluno(aluno vetorAluno[], int cod, int qtdAlunos) {
+
+ 
+    int i = 0, f = qtdAlunos - 1;
     
+    
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetorAluno[m].codigo; m = (i + f) / 2){
+        if (cod > vetorAluno[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    	
+    	
+    	if (cod == vetorAluno[m].codigo){
+      		return m;
+	}
+
+    
+    else
+       return -1;
+
+}
+
+bool buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod, int qtdInstrutores){
+	
+	if(qtdInstrutores == 0){
+		return true;
+	}
+	
     int i = 0, f = qtdInstrutores - 1;
     int m = (i + f) / 2;
     for (; f >= i && cod != vetorInstrutor[m].codigo; m = (i + f) / 2){
@@ -474,12 +503,39 @@ int buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod, int qtdInstrutore
     }
 
     	if (cod == vetorInstrutor[m].codigo){
-      return m;
+    	
+      	return false;
     }
 
     
     else
-       return -1;
+       return true;
+
+}
+
+bool buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros){
+	
+	if(qtdRegistros == 0){
+		return true;
+	}
+	
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+
+    	if (cod == vetor[m].codigo){
+    	
+      	return false;
+    }
+
+    
+    else
+       return true;
 
 }
 
@@ -487,6 +543,16 @@ bool buscaSerialInstrutor(instrutor vetorInstrutor[], int cod, int cont) {
     int i = 0;
     for (; i < cont; i++) {
         if (cod == vetorInstrutor[i].codigo) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool buscaSerialMatricula(matricula vetor[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == vetor[i].codigo) {
             return false;
         }
     }
@@ -580,7 +646,7 @@ void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor 
             cin >> v[i].codigo;
             cin.ignore();
 
-            if (buscaSerialInstrutor(v, v[i].codigo, i) && buscaSerialInstrutor(vetorInstrutores, v[i].codigo, qtdRegistrosInstrutor)) {
+            if (buscaSerialInstrutor(v, v[i].codigo, i) && buscaBinariaInstrutor(vetorInstrutores, v[i].codigo, qtdRegistrosInstrutor)) {
                 if (v[i].codigo > 0) {
                     cout << "Nome: ";
                     getline(cin, v[i].nome);
@@ -943,4 +1009,66 @@ void mostrarTurmas(turma vetorTurmas[], int qtdTurmas) {
         cout << endl;
     }
 }
+
+/*void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma) {
+    int i = 0;
+
+    cout << "\nCadastro de Matriculas\n";
+    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+        for (int y = 1; y != -1;) {
+            cout << "Codigo: ";
+            cin >> v[i].codigo;
+            
+
+            if (buscaSerialMatricula(v, v[i].codigo, i) && buscaBinariaMatricula(vetorMatriculas, v[i].codigo, qtdRegistrosMatricula)) {
+                if (v[i].codigo != 0) {
+                	for(; y != -1;){					
+                    cout << "Codigo do aluno: ";
+                    cin >> v[i].codigoAluno;
+            
+                    if(buscaBinariaAluno != -1){
+                    	cout << " -Curso: " << vetorCursos[resultBusca].descricao << "\n  -Valor Aula: R$" << vetorCursos[resultBusca].valorAula << endl;
+                    	y = -1;
+					}else cout << "\nCodigo do curso nao encontrado, tente novamente." << endl;
+                } 
+                	
+                	for(y = 1; y != -1;){
+                		cout << "Codigo do instrutor: ";
+                    	cin >> v[i].codigoInstrutor;
+                    	
+                    	
+                    	int resultBusca = buscaBinariaInstrutor(vetorInstrutores, v[i].codigoInstrutor, qtdRegistrosInstrutor);
+                    	if(resultBusca != -1){
+    	
+                    		cout << " -Instrutor: " << vetorInstrutores[resultBusca].nome;
+                    		resultBusca = buscaSerialCidade(vetorCidades, vetorInstrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
+                    		cout << "\n  -Cidade: " << vetorCidades[resultBusca].nome << endl;
+                    		y = -1;
+						}else cout << "\nCodigo do instrutor nao encontrado, tente novamente." << endl;
+					}
+
+                    cout << "Total de participantes: ";
+                    cin >> v[i].totalParticipantes;
+                    
+                    cout << "Quantidade maxima de participantes: ";
+                    cin >> v[i].quantMaxParticipantes;
+                    cout << "\n\n";
+                    
+
+                } else
+                    saida = -1;
+                y = -1;
+
+            } else
+                cout << "\nCodigo repetido. Tente digitar outro codigo\n" << endl;
+
+        }
+    }
+
+    if (i == TAMAX) {
+        qtdRegistros = i;
+    } else
+        qtdRegistros = i - 1;
+        
+}*/
 
