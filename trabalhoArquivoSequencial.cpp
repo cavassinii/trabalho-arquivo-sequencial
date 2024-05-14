@@ -463,10 +463,77 @@ int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos) {
 
 }
 
+<<<<<<< HEAD
 int buscaBinariaAluno(aluno vetor[], int cod, int qtdRegistros){
 	
 	if(qtdRegistros == 0){
 		return -1;
+	}
+	
+    int i = 0, f = qtdRegistros - 1;
+=======
+int buscaBinariaAluno(aluno vetorAluno[], int cod, int qtdAlunos) {
+
+ 
+    int i = 0, f = qtdAlunos - 1;
+    
+    
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetorAluno[m].codigo; m = (i + f) / 2){
+        if (cod > vetorAluno[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    	
+    	
+    	if (cod == vetorAluno[m].codigo){
+      		return m;
+	}
+
+    
+    else
+       return -1;
+
+}
+
+bool buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod, int qtdInstrutores){
+	
+	if(qtdInstrutores == 0){
+		return true;
+	}
+	
+    int i = 0, f = qtdInstrutores - 1;
+>>>>>>> aec9c44208fcea4ba377db91184148e52d42acbf
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+
+<<<<<<< HEAD
+    	if (cod == vetor[m].codigo){
+    	
+      	return m;
+=======
+    	if (cod == vetorInstrutor[m].codigo){
+    	
+      	return false;
+>>>>>>> aec9c44208fcea4ba377db91184148e52d42acbf
+    }
+
+    
+    else
+       return true;
+
+}
+
+bool buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros){
+	
+	if(qtdRegistros == 0){
+		return true;
 	}
 	
     int i = 0, f = qtdRegistros - 1;
@@ -480,12 +547,12 @@ int buscaBinariaAluno(aluno vetor[], int cod, int qtdRegistros){
 
     	if (cod == vetor[m].codigo){
     	
-      	return m;
+      	return false;
     }
 
     
     else
-       return -1;
+       return true;
 
 }
 
@@ -681,7 +748,11 @@ void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor 
             cin >> v[i].codigo;
             cin.ignore();
 
+<<<<<<< HEAD
             if (buscaSerialInstrutor(v, v[i].codigo, i) && buscaBinariaInstrutor(vetorInstrutores, v[i].codigo, qtdRegistrosInstrutor) == -1) {
+=======
+            if (buscaSerialInstrutor(v, v[i].codigo, i) && buscaBinariaInstrutor(vetorInstrutores, v[i].codigo, qtdRegistrosInstrutor)) {
+>>>>>>> aec9c44208fcea4ba377db91184148e52d42acbf
                 if (v[i].codigo > 0) {
                     cout << "Nome: ";
                     getline(cin, v[i].nome);
