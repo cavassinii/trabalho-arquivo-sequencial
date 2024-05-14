@@ -5,7 +5,12 @@
 
 using namespace std;
 
-#define TAMAX 10
+#define TMCidades 10
+#define TMCursos 10
+#define TMInstrutores 10
+#define TMAlunos 10
+#define TMTurmas 10
+#define TMMatriculas 10
 
 struct cidade {
     int codigo;
@@ -83,36 +88,36 @@ int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
 int main() {
     int opcao;
 	//VARIAVEIS CIDADE
-    cidade cidades[TAMAX];
+    cidade cidades[TMCidades];
     int qtdRegistrosCidade = 0;
     
     //VARIAVEIS CURSO
-    curso cursos[TAMAX];
+    curso cursos[TMCursos];
     int qtdRegistrosCurso = 0;
 	
 	//VARIAVEIS INSTRUTOR
-    instrutor instrutores[TAMAX];
+    instrutor instrutores[TMInstrutores];
     int qtdRegistrosInstrutor = 0;
-    instrutor TInstrutor[TAMAX];
+    instrutor TInstrutor[TMInstrutores];
     int contTInstrutor = 0;
-    instrutor SInstrutor[TAMAX];
+    instrutor SInstrutor[TMInstrutores];
     int contSInstrutor = 0;
        
     //VARIAVEIS ALUNO
-    aluno alunos[TAMAX];
+    aluno alunos[TMAlunos];
     int qtdRegistrosAluno = 0;
-    aluno TAluno[TAMAX];
+    aluno TAluno[TMAlunos];
     int contTAluno = 0;
-    aluno SAluno[TAMAX];
+    aluno SAluno[TMAlunos];
     int contSAluno = 0;
-    int TExclusao[TAMAX], contTExclusao = 0;   
+    int TExclusao[TMAlunos], contTExclusao = 0;   
 	
 	//VARIAVEIS TURMA
-	 turma turmas[TAMAX];
+	 turma turmas[TMTurmas];
 	 int qtdRegistrosTurma = 0;
-	 turma TTurma[TAMAX];
+	 turma TTurma[TMTurmas];
 	 int contTTurma = 0;
-	 turma STurma[TAMAX];
+	 turma STurma[TMTurmas];
 	 int contSTurma = 0;	 
     
     
@@ -463,7 +468,6 @@ int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos) {
 
 }
 
-<<<<<<< HEAD
 int buscaBinariaAluno(aluno vetor[], int cod, int qtdRegistros){
 	
 	if(qtdRegistros == 0){
@@ -471,88 +475,22 @@ int buscaBinariaAluno(aluno vetor[], int cod, int qtdRegistros){
 	}
 	
     int i = 0, f = qtdRegistros - 1;
-=======
-int buscaBinariaAluno(aluno vetorAluno[], int cod, int qtdAlunos) {
-
- 
-    int i = 0, f = qtdAlunos - 1;
-    
-    
     int m = (i + f) / 2;
-    for (; f >= i && cod != vetorAluno[m].codigo; m = (i + f) / 2){
-        if (cod > vetorAluno[m].codigo)
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
             i = m + 1;
         else
             f = m - 1;
     }
+
+    	if (cod == vetor[m].codigo){
     	
-    	
-    	if (cod == vetorAluno[m].codigo){
-      		return m;
-	}
+      	return m;
+    }
 
     
     else
        return -1;
-
-}
-
-bool buscaBinariaInstrutor(instrutor vetorInstrutor[], int cod, int qtdInstrutores){
-	
-	if(qtdInstrutores == 0){
-		return true;
-	}
-	
-    int i = 0, f = qtdInstrutores - 1;
->>>>>>> aec9c44208fcea4ba377db91184148e52d42acbf
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-
-<<<<<<< HEAD
-    	if (cod == vetor[m].codigo){
-    	
-      	return m;
-=======
-    	if (cod == vetorInstrutor[m].codigo){
-    	
-      	return false;
->>>>>>> aec9c44208fcea4ba377db91184148e52d42acbf
-    }
-
-    
-    else
-       return true;
-
-}
-
-bool buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros){
-	
-	if(qtdRegistros == 0){
-		return true;
-	}
-	
-    int i = 0, f = qtdRegistros - 1;
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-
-    	if (cod == vetor[m].codigo){
-    	
-      	return false;
-    }
-
-    
-    else
-       return true;
 
 }
 
@@ -689,7 +627,7 @@ void leituraCidade(struct cidade v[], int &qtdRegistros) {
     int i = 0;
 
     cout << "\nLeitura de Cidades";
-    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+    for (int saida = 1; i < TMCidades && saida == 1; i++) {
         cout << "\nCodigo: ";
         cin >> v[i].codigo;
         cin.ignore();
@@ -701,8 +639,8 @@ void leituraCidade(struct cidade v[], int &qtdRegistros) {
         } else
             saida = 0;
     }
-	if(v[TAMAX-1].codigo != 0){
-		if (i == TAMAX) {
+	if(v[TMCidades -1].codigo != 0){
+		if (i == TMCidades) {
         qtdRegistros = i;
     	}else
         	qtdRegistros = i - 1;	
@@ -714,7 +652,7 @@ void leituraCurso(struct curso v[], int &qtdRegistros) {
     int i = 0;
 
     cout << "\nCadastro de Cursos";
-    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+    for (int saida = 1; i < TMCursos && saida == 1; i++) {
         cout << "\nCodigo: ";
         cin >> v[i].codigo;
         cin.ignore();
@@ -728,8 +666,8 @@ void leituraCurso(struct curso v[], int &qtdRegistros) {
             saida = 0;
     }
     
-	if(v[TAMAX-1].codigo != 0){
-		if (i == TAMAX) {
+	if(v[TMCursos-1].codigo != 0){
+		if (i == TMCursos) {
         qtdRegistros = i;
     	}else
         	qtdRegistros = i - 1;	
@@ -742,17 +680,13 @@ void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor 
     int i = 0;
 
     cout << "\nCadastro de Instrutores\n";
-    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+    for (int saida = 1; i < TMInstrutores && saida == 1; i++) {
         for (int y = 1; y != -1;) {
             cout << "Codigo: ";
             cin >> v[i].codigo;
             cin.ignore();
 
-<<<<<<< HEAD
             if (buscaSerialInstrutor(v, v[i].codigo, i) && buscaBinariaInstrutor(vetorInstrutores, v[i].codigo, qtdRegistrosInstrutor) == -1) {
-=======
-            if (buscaSerialInstrutor(v, v[i].codigo, i) && buscaBinariaInstrutor(vetorInstrutores, v[i].codigo, qtdRegistrosInstrutor)) {
->>>>>>> aec9c44208fcea4ba377db91184148e52d42acbf
                 if (v[i].codigo > 0) {
                     cout << "Nome: ";
                     getline(cin, v[i].nome);
@@ -780,8 +714,8 @@ void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor 
         }
     }
 
-	if(v[TAMAX-1].codigo != 0){
-		if (i == TAMAX) {
+	if(v[TMInstrutores -1].codigo != 0){
+		if (i == TMInstrutores) {
         qtdRegistros = i;
     	}else
         	qtdRegistros = i - 1;	
@@ -830,7 +764,7 @@ void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[
 	int i = 0;
 
     cout << "\nCadastro de Alunos\n";
-    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+    for (int saida = 1; i < TMAlunos && saida == 1; i++) {
         for (int y = 1; y != -1;) {
             cout << "Codigo: ";
             cin >> v[i].codigo;
@@ -864,8 +798,8 @@ void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[
         }
     }
 	
-	if(v[TAMAX-1].codigo != 0){
-		if (i == TAMAX) {
+	if(v[TMAlunos-1].codigo != 0){
+		if (i == TMAlunos) {
         qtdRegistros = i;
     	}else
         	qtdRegistros = i - 1;	
@@ -914,7 +848,7 @@ void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, str
 void leituraExclusaoAluno(int TExclusao[], int &contTExclusao){
 	int i = 0;
 
-    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+    for (int saida = 1; i < TMAlunos && saida == 1; i++) {
             cout << "Codigo para exclusao: ";
             cin >> TExclusao[i];
             cin.ignore();
@@ -924,13 +858,13 @@ void leituraExclusaoAluno(int TExclusao[], int &contTExclusao){
 
     }
 
-	if(v[TAMAX-1].codigo != 0){
-		if (i == TAMAX) {
-        qtdRegistros = i;
+	if(TExclusao[TMAlunos-1] != 0){
+		if (i == TMAlunos) {
+        contTExclusao = i;
     	}else
-        	qtdRegistros = i - 1;	
+        	contTExclusao = i - 1;	
 	}else
-		qtdRegistros = i - 1;
+		contTExclusao = i - 1;
 }
 
 void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA){
@@ -962,7 +896,7 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
     int i = 0;
 
     cout << "\nCadastro de Turmas\n";
-    for (int saida = 1; i < TAMAX && saida == 1; i++) {
+    for (int saida = 1; i < TMTurmas && saida == 1; i++) {
         for (int y = 1; y != -1;) {
             cout << "Codigo: ";
             cin >> v[i].codigo;
@@ -1016,8 +950,8 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
         }
     }
 
-	if(v[TAMAX-1].codigo != 0){
-		if (i == TAMAX) {
+	if(v[TMTurmas -1].codigo != 0){
+		if (i == TMTurmas) {
         qtdRegistros = i;
     	}else
         	qtdRegistros = i - 1;	
