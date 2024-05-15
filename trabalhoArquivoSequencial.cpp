@@ -88,7 +88,8 @@ int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma);
 int buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros);
 bool buscaSerialMatricula(matricula vetor[], int cod, int cont);
-
+void inclusaoMatricula(struct matricula S[], int contS, struct matricula T[], int contT, struct matricula A[], int &contA);
+void mostrarMatriculas(matricula vetor[], int qtdRegistros);
 
 int main() {
     int opcao;
@@ -131,7 +132,7 @@ int main() {
 	 matricula TMatricula[TMMatriculas];
 	 int contTMatricula = 0;
 	 matricula SMatricula[TMMatriculas];
-	 int contSTmatricula = 0;
+	 int contSMatricula = 0;
     
     
     
@@ -404,7 +405,7 @@ int main() {
             
             break;
         case 6:
-            int operacaoTurma;
+            int operacaoMatricula;
             
             system("cls");
             
@@ -417,19 +418,19 @@ int main() {
 				
 				switch(operacaoMatricula){
 				case 1:
-					
-					leituraMatricula(TMatricula, contTMatricula, matriculas, qtdRegistrosMatricula, cidades, qtdRegistrosCidade, instrutores, qtdRegistrosInstrutor, cursos, qtdRegistrosCurso,  );
-					inclusaoMatricula(STurma, contSTurma, TTurma, contTTurma, turmas, qtdRegistrosTurma);
+
+					leituraMatricula(TMatricula, contTMatricula, matriculas, qtdRegistrosMatricula, cidades, qtdRegistrosCidade, instrutores, qtdRegistrosInstrutor, cursos, qtdRegistrosCurso, alunos, qtdRegistrosAluno, turmas, qtdRegistrosTurma);
+					inclusaoMatricula(SMatricula, contSMatricula, TMatricula, contTMatricula, matriculas, qtdRegistrosMatricula);
 					
 					for(int i = 0; i < qtdRegistrosTurma; i++){
-            			STurma[i].codigo = turmas[i].codigo;
-            			STurma[i].codigoCurso = turmas[i].codigoCurso;
-            			STurma[i].codigoInstrutor = turmas[i].codigoInstrutor;
-            			STurma[i].totalParticipantes = turmas[i].totalParticipantes;
-            			STurma[i].quantMaxParticipantes = turmas[i].quantMaxParticipantes;
+            			SMatricula[i].codigo = matriculas[i].codigo;
+            			SMatricula[i].codigoAluno = matriculas[i].codigoAluno;
+            			SMatricula[i].codigoTurma = matriculas[i].codigoTurma;
+            			SMatricula[i].quantidadeAulas = matriculas[i].quantidadeAulas;
+            			SMatricula[i].valorTotal = matriculas[i].valorTotal;
 					}
 					
-					contSTurma = qtdRegistrosTurma;
+					contSMatricula = qtdRegistrosMatricula;
 
 					system("cls");
 					
@@ -437,7 +438,7 @@ int main() {
 				
 				case 2:
 					
-                	mostrarTurmas(turmas, qtdRegistrosTurma);
+                	mostrarMatriculas(matriculas, qtdRegistrosMatricula);
                 	
                 	cout << "Precione enter para continuar";
                 	getch();
@@ -449,6 +450,10 @@ int main() {
 				default:
 					system("cls");
 					cout << "Opcao invalida, tente novamente.\n" << endl;
+				}
+			} while (operacaoMatricula != 3);
+            
+            break;
            		
         case 7:
             cout << "Saindo do programa..." << endl;
@@ -1112,6 +1117,19 @@ void mostrarTurmas(turma vetorTurmas[], int qtdTurmas) {
     }
 }
 
+void mostrarMatriculas(matricula vetor[], int qtdRegistros) {
+    cout << "=== MATRICULAS ===" << endl;
+    for (int i = 0; i < qtdRegistros; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetor[i].codigo << endl;
+        cout << "Codigo do Aluno: " << vetor[i].codigoAluno << endl;
+        cout << "Codigo do Turma: " << vetor[i].codigoTurma << endl;
+        cout << "Quantidade de Aulas: " << vetor[i].quantidadeAulas << endl;
+        cout << "Valor Total: " << vetor[i].valorTotal << endl;
+        cout << endl;
+    }
+}
+
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma) {
     int i = 0;
     int resultBusca = 0;
@@ -1179,8 +1197,11 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
 
         }
         
-        cout << "\nMatricula incluida com sucesso, precione alguma tecla para continuar";
-        getch();
+        if(v[i].codigo != 0){
+        	cout << "\nMatricula incluida com sucesso, precione alguma tecla para continuar";
+        	getch();
+		}
+
     }
 
 	if(v[TMMatriculas -1].codigo != 0){
@@ -1193,3 +1214,43 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
         
 }
 
+void inclusaoMatricula(struct matricula S[], int contS, struct matricula T[], int contT, struct matricula A[], int &contA) {
+    int i = 0, j = 0, k = 0; // i (contador de S) j (contador de T) k (contador de A)
+    for (; i < contS && j < contT; k++) {
+        if (S[i].codigo < T[j].codigo) {
+            A[k].codigo = S[i].codigo;
+            A[k].codigoAluno = S[i].codigoAluno;
+            A[k].codigoTurma = S[i].codigoTurma;
+            A[k].quantidadeAulas = S[i].quantidadeAulas;
+            A[k].valorTotal = S[i].valorTotal;
+            i++;
+        } else {
+            A[k].codigo = T[j].codigo;
+            A[k].codigoAluno = T[j].codigoAluno;
+            A[k].codigoTurma = T[j].codigoTurma;
+            A[k].quantidadeAulas = T[j].quantidadeAulas;
+            A[k].valorTotal = T[j].valorTotal;
+            j++;
+        }
+    }
+    while (i < contS) {
+        A[k].codigo = S[i].codigo;
+        A[k].codigoAluno = S[i].codigoAluno;
+        A[k].codigoTurma = S[i].codigoTurma;
+        A[k].quantidadeAulas = S[i].quantidadeAulas;
+        A[k].valorTotal = S[i].valorTotal;
+        i++;
+        k++;
+    }
+    while (j < contT) {
+        A[k].codigo = T[j].codigo;
+        A[k].codigoAluno = T[j].codigoAluno;
+        A[k].codigoTurma = T[j].codigoTurma;
+        A[k].quantidadeAulas = T[j].quantidadeAulas;
+        A[k].valorTotal = T[j].valorTotal;
+        j++;
+        k++;
+    }
+    contA = k;
+    
+}
