@@ -83,6 +83,7 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
 void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, struct turma A[], int &contA);
 void mostrarTurmas(turma vetor[], int qtdRegistros);
 int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
+void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor);
 
 //FUNÇÕES TABELA MATRICULAS
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma);
@@ -361,7 +362,8 @@ int main() {
 			do {
 				cout << "1. Incluir Turmas" << endl;
 				cout << "2. Mostrar Turmas" << endl;
-				cout << "3. Voltar" << endl;
+				cout << "3. Consultar Turma" << endl;
+				cout << "4. Voltar" << endl;
 				cout << "\nEscolha uma operacao: ";
 				cin >> operacaoTurma;
 				
@@ -395,13 +397,19 @@ int main() {
 					
 					break;
 				case 3:
+					
+					consultarTurma(turmas, qtdRegistrosTurma, cursos, qtdRegistrosCurso, cidades, qtdRegistrosCidade, instrutores, qtdRegistrosInstrutor);
+					
+                	system("cls");
+                	
+					break;
+				case 4:
 					break;
 				default:
 					system("cls");
 					cout << "Opcao invalida, tente novamente.\n" << endl;
-					
 				}
-			} while (operacaoTurma != 3);
+			} while (operacaoTurma != 4);
             
             break;
         case 6:
@@ -442,6 +450,7 @@ int main() {
                 	
                 	cout << "Precione enter para continuar";
                 	getch();
+                	
                 	system("cls");
 					
 					break;
@@ -463,19 +472,6 @@ int main() {
             break;
         }
     } while (opcao != 7);
-
-	
-	
-    for (int i = 0; i < qtdRegistrosTurma; i++) {
-        cout << "\n\n**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo: " << turmas[i].codigo << endl;
-        cout << "Codigo Curso: " << turmas[i].codigoCurso << endl;
-        cout << "Codigo Instrutor : " << turmas[i].codigoInstrutor << endl;
-        cout << "Total de Participantes : " << turmas[i].totalParticipantes << endl;
-        cout << "Maximo de Participantes : " << turmas[i].quantMaxParticipantes << endl;
- 
- 
-    }
 
     return 0;
 }
@@ -1133,7 +1129,7 @@ void mostrarMatriculas(matricula vetor[], int qtdRegistros) {
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma) {
     int i = 0;
     int resultBusca = 0;
-
+    bool teste = true;
     cout << "\nCadastro de Matriculas\n";
     for (int saida = 1; i < TMMatriculas && saida == 1; i++) {
         for (int y = 1; y != -1;) {
@@ -1186,8 +1182,10 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
 							  	
 							  cout << "\n*Matricula nao incluida, turma cheia. Precione enter para voltar*";
 							  y = -1;
-							  saida = -1;
+							  teste = false;
+							  i--;
 							  getch();
+							  cout << "\n\n";
 							  
 							    }          	                    	
                                      	                   	                  	
@@ -1207,7 +1205,7 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
 
         }
         
-        if(v[i].codigo != 0 && saida != -1){
+        if(v[i].codigo != 0 && teste){
         	cout << "\n\n*Matricula incluida com sucesso, precione alguma tecla para continuar*";
         	getch();
         	cout << "\n\n";
@@ -1264,4 +1262,50 @@ void inclusaoMatricula(struct matricula S[], int contS, struct matricula T[], in
     }
     contA = k;
     
+}
+
+void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor){
+	int cod = 0;
+	int resultBusca = 0;
+	
+	for(int y = 1; y != -1;){
+		cout << "Digite o codigo da turma que quer consultar: ";
+		cin >> cod;
+		cin.ignore();
+		
+		if(cod != 0){
+			if(buscaBinariaTurma(turmas, cod, qtdRegistrosTurma) != -1){
+			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);	
+			resultBusca = buscaBinariaInstrutor(instrutores, turmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
+			
+			cout << "\nNome do instrutor: " << instrutores[resultBusca].nome << endl;
+			
+			resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
+			
+			cout << "Cidade do instrutor: " << cidades[resultBusca].nome << endl;
+			
+			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);
+			resultBusca = buscaBinariaCurso(cursos, turmas[resultBusca].codigoCurso, qtdRegistrosCurso);
+			
+			cout << "Curso: " << cursos[resultBusca].descricao << endl;
+			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);
+			cout << "Total de participantes: " << turmas[resultBusca].totalParticipantes;
+			y = -1;
+			
+			cout << "\n\nPrecione enter para continuar";
+            getch();
+			
+		}
+		else
+			cout << "\nCodigo da turma nao encontrado, tente novamente\n\n";
+
+		}
+		else
+			y = -1;
+	
+	}
+	
+
+	
+	
 }
