@@ -79,7 +79,7 @@ void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct alun
 void mostrarAlunos(aluno vetor[], int qtdRegistros);
 
 //FUNÇÕES TABELA TURMA
-void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade);
+void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompletas, int contTurmasCompletas);
 void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, struct turma A[], int &contA);
 void mostrarTurmas(turma vetor[], int qtdRegistros);
 int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
@@ -126,6 +126,8 @@ int main() {
 	 int contTTurma = 0;
 	 turma STurma[TMTurmas];
 	 int contSTurma = 0;
+	 int turmasCompletas[TMTurmas];
+	 int contTurmasCompletas = 0;
 	 
 	 //VARIAVEIS MATRICULA
 	 matricula matriculas[TMMatriculas] ;
@@ -943,7 +945,7 @@ void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct alun
     contA = k;
 }
 
-void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade) {
+void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompletas[], int contTurmasCompletas) {
     int i = 0;
 
     cout << "\nCadastro de Turmas\n";
@@ -983,12 +985,18 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
 						}else cout << "\nCodigo do instrutor nao encontrado, tente novamente." << endl;
 					}
 
+					cout << "Quantidade maxima de participantes: ";
+                    cin >> v[i].quantMaxParticipantes;
+
                     cout << "Total de participantes: ";
                     cin >> v[i].totalParticipantes;
-                    
-                    cout << "Quantidade maxima de participantes: ";
-                    cin >> v[i].quantMaxParticipantes;
                     cout << "\n\n";
+                    
+                    if(v[i].totalParticipantes == quantMaxParticipantes){
+                    	
+					}
+                    
+
                     
 
                 } else
@@ -1176,6 +1184,8 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
                     			cout << " -Total a pagar: R$" << v[i].valorTotal;
                     			
                     			y = -1;
+                    			
+                    			teste = true;
 								
 							}
 							  else{
@@ -1308,4 +1318,11 @@ void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso c
 
 	
 	
+}
+
+void consultarTurmasCompletas(struct turma turmas, int qtdRegistrosTurma, struct curso cursos, int qtdRegistrosCurso, struct instrutor instrutores, int qtdRegistrosInstrutor, struct cidade cidades, int qtdRegistrosCidade){
+	int cod = 0;
+	int resultBusca = 0;
+	
+	for(i = 0; i)
 }
