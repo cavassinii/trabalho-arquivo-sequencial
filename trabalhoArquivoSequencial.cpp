@@ -79,14 +79,15 @@ void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct alun
 void mostrarAlunos(aluno vetor[], int qtdRegistros);
 
 //FUNÇÕES TABELA TURMA
-void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompletas, int contTurmasCompletas);
+void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompleta[], int &contTurmasCompletas);
 void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, struct turma A[], int &contA);
 void mostrarTurmas(turma vetor[], int qtdRegistros);
 int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
 void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor);
+void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade);
 
 //FUNÇÕES TABELA MATRICULAS
-void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma);
+void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma, int turmasCompletas[], int &contTurmasCompletas);
 int buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros);
 bool buscaSerialMatricula(matricula vetor[], int cod, int cont);
 void inclusaoMatricula(struct matricula S[], int contS, struct matricula T[], int contT, struct matricula A[], int &contA);
@@ -372,7 +373,7 @@ int main() {
 				switch(operacaoTurma){
 				case 1:
 					
-					leituraTurma(TTurma, contTTurma, turmas, qtdRegistrosTurma, cursos, qtdRegistrosCurso, instrutores, qtdRegistrosInstrutor, cidades, qtdRegistrosCidade);
+					leituraTurma(TTurma, contTTurma, turmas, qtdRegistrosTurma, cursos, qtdRegistrosCurso, instrutores, qtdRegistrosInstrutor, cidades, qtdRegistrosCidade, turmasCompletas, contTurmasCompletas);
 					inclusaoTurma(STurma, contSTurma, TTurma, contTTurma, turmas, qtdRegistrosTurma);
 					
 					for(int i = 0; i < qtdRegistrosTurma; i++){
@@ -429,7 +430,7 @@ int main() {
 				switch(operacaoMatricula){
 				case 1:
 
-					leituraMatricula(TMatricula, contTMatricula, matriculas, qtdRegistrosMatricula, cidades, qtdRegistrosCidade, instrutores, qtdRegistrosInstrutor, cursos, qtdRegistrosCurso, alunos, qtdRegistrosAluno, turmas, qtdRegistrosTurma);
+					leituraMatricula(TMatricula, contTMatricula, matriculas, qtdRegistrosMatricula, cidades, qtdRegistrosCidade, instrutores, qtdRegistrosInstrutor, cursos, qtdRegistrosCurso, alunos, qtdRegistrosAluno, turmas, qtdRegistrosTurma, turmasCompletas, contTurmasCompletas);
 					inclusaoMatricula(SMatricula, contSMatricula, TMatricula, contTMatricula, matriculas, qtdRegistrosMatricula);
 					
 					for(int i = 0; i < qtdRegistrosTurma; i++){
@@ -992,8 +993,9 @@ void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[
                     cin >> v[i].totalParticipantes;
                     cout << "\n\n";
                     
-                    if(v[i].totalParticipantes == quantMaxParticipantes){
-                    	
+                    if(v[i].totalParticipantes == v[i].quantMaxParticipantes){
+                    	turmasCompletas[contTurmasCompletas] = v[i].codigo;
+                    	contTurmasCompletas++;
 					}
                     
 
@@ -1134,7 +1136,7 @@ void mostrarMatriculas(matricula vetor[], int qtdRegistros) {
     }
 }
 
-void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma) {
+void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma, int turmasCompletas[], int &contTurmasCompletas) {
     int i = 0;
     int resultBusca = 0;
     bool teste = true;
@@ -1169,6 +1171,10 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
                     	if(resultBusca != -1){
 							if(vetorTurmas[resultBusca].totalParticipantes + 1 <= vetorTurmas[resultBusca].quantMaxParticipantes){
 								vetorTurmas[resultBusca].totalParticipantes++;
+								if(vetorTurmas[resultBusca].totalParticipantes == vetorTurmas[resultBusca].quantMaxParticipantes){
+									turmasCompletas[contTurmasCompletas] = vetorTurmas[resultBusca].codigo;
+									contTurmasCompletas++;
+								}
  		                    	resultBusca = buscaBinariaInstrutor(vetorInstrutores, vetorTurmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
                     			cout << "  -Instrutor: " << vetorInstrutores[resultBusca].nome;
                     		
@@ -1320,9 +1326,21 @@ void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso c
 	
 }
 
-void consultarTurmasCompletas(struct turma turmas, int qtdRegistrosTurma, struct curso cursos, int qtdRegistrosCurso, struct instrutor instrutores, int qtdRegistrosInstrutor, struct cidade cidades, int qtdRegistrosCidade){
-	int cod = 0;
+void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
 	int resultBusca = 0;
-	
-	for(i = 0; i)
-}
+	int aux = 0;
+	cout << "\n\nTurmas Completas: \n\n";
+		
+	for(int i = 0; i < (contTurmasCompletas - 1); i++){
+		aux = turmasCompletas[i];
+		cout << "Codigo: " << turmas[aux].codigo << endl;
+		resultBusca = buscaBinariaCurso(cursos, turmas[aux].codigoCurso, qtdRegistrosCurso);
+		cout << "Curso: " << cursos[resultBusca].descricao << endl;
+		resultBusca = buscaBinariaInstrutor(instrutores, turmas[turmasCompletas[i]].codigoInstrutor, qtdRegistrosInstrutor);
+		cout << "Instrutor: " << instrutores[resultBusca].nome << " | " << cidades[instrutores[resultBusca].codigoCidade].nome << " " << cidades[instrutores[resultBusca].codigoCidade].uf << endl;
+		cout << "Total de Participantes: " << turmas[turmasCompletas[i]].totalParticipantes << endl;
+		cout << "Maximo de Participantes: " << turmas[turmasCompletas[i]].quantMaxParticipantes << endl;
+		 
+		}
+				
+	}
