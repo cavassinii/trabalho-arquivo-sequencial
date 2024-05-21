@@ -1346,18 +1346,22 @@ void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso c
 
 void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
 	int resultBusca = 0;
-	//int aux = 0;
+	int i = 0;
+	
 	cout << "\n\nTurmas Completas: \n\n";
-		
-	for(int i = 0; i < contTurmasCompletas; i++){
-		//aux = turmasCompletas[i];
+			
+		for(int i = 0; i < contTurmasCompletas; i++){
+		cout << "\n\ni = " << i << "\n\n";
 		cout << "Codigo: " << turmasCompletas[i] << endl;
 		resultBusca = buscaBinariaCurso(cursos, turmas[turmasCompletas[i]].codigoCurso, qtdRegistrosCurso);
 		cout << "Curso: " << cursos[resultBusca].descricao << endl;
 		resultBusca = buscaBinariaInstrutor(instrutores, turmas[turmasCompletas[i]].codigoInstrutor, qtdRegistrosInstrutor);
-		cout << "Instrutor: " << instrutores[resultBusca].nome << " | " << cidades[instrutores[resultBusca].codigoCidade].nome << " " << cidades[instrutores[resultBusca].codigoCidade].uf << endl;
-		cout << "Total de Participantes: " << turmas[turmasCompletas[i]].totalParticipantes << endl;
-		cout << "Maximo de Participantes: " << turmas[turmasCompletas[i]].quantMaxParticipantes << endl;
+		cout << "Instrutor: " << instrutores[resultBusca].nome;
+		resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
+		cout << " | " << cidades[resultBusca].nome << " " << cidades[resultBusca].uf << endl;
+		resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
+		cout << "Total de Participantes: " << turmas[resultBusca].totalParticipantes << endl;
+		cout << "Maximo de Participantes: " << turmas[resultBusca].quantMaxParticipantes << endl;
 		 
 		}
 				
