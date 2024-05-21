@@ -85,6 +85,7 @@ void mostrarTurmas(turma vetor[], int qtdRegistros);
 int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
 void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor);
 void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade);
+void ordenarCodigos(int v[], int qtdRegistros);
 
 //FUNÇÕES TABELA MATRICULAS
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma, int turmasCompletas[], int &contTurmasCompletas);
@@ -155,7 +156,7 @@ int main() {
     do {
         system("cls");
 
-        cout << "____M_E_N_U____" << endl;
+        cout << "*_M_E_N_U_*" << endl;
         cout << "\n1. Cidades" << endl;
         cout << "2. Cursos" << endl;
         cout << "3. Instrutores" << endl;
@@ -411,7 +412,7 @@ int main() {
 					
 					consultarTurmasCompletas(turmas, qtdRegistrosTurma, turmasCompletas, contTurmasCompletas, cursos, qtdRegistrosCurso, instrutores, qtdRegistrosInstrutor, cidades, qtdRegistrosCidade);
 					
-					cout << "Precione enter para continuar";
+					cout << "\nPrecione enter para continuar";
 					getch();
 					system("cls");
 					
@@ -1345,6 +1346,66 @@ void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso c
 }
 
 void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
+    
+    ordenarCodigos(turmasCompletas, contTurmasCompletas);
+    
+	int resultBusca = 0;
+    
+    cout << "\n\nTurmas Completas: \n";
+            
+    for(int i = 0; i < contTurmasCompletas; i++){
+        //int codigoTurma = turmasCompletas[i];
+        resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
+        
+        cout << "\nCodigo: " << turmasCompletas[i] << endl;
+        resultBusca = buscaBinariaCurso(cursos, turmas[resultBusca].codigoCurso, qtdRegistrosCurso);
+        cout << "Curso: " << cursos[resultBusca].descricao << endl;
+
+        resultBusca = buscaBinariaInstrutor(instrutores, turmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
+        cout << "Instrutor: " << instrutores[resultBusca].nome;
+            
+        resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
+        cout << " | " << cidades[resultBusca].nome << " " << cidades[resultBusca].uf << endl;
+            
+    	resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
+        cout << "Total de Participantes: " << turmas[resultBusca].totalParticipantes << endl;
+        cout << "Maximo de Participantes: " << turmas[resultBusca].quantMaxParticipantes << endl;
+     
+    }
+}
+
+void ordenarCodigos(int v[], int qtdRegistros){
+	for(int i = 0; i < qtdRegistros; i++){
+		int menorIndice = i;
+		
+		for(int j = i + 1; j < qtdRegistros; j++){
+			if(v[j] < v[menorIndice]){
+				menorIndice = j;
+			}
+		}
+		
+		if(menorIndice != i){
+			int aux = 0;
+			aux = v[i];
+			v[i] = v[menorIndice];
+			v[menorIndice] = aux; 
+		}
+	}
+}
+
+/*void exibirMatriculas(struct matricula matriculas, int qtdRegistrosMatricula, struct aluno alunos, int qtdRegistrosAluno, struct curso cursos, int qtdRegistrosCurso, struct instrutor instrutores, int qtdRegistrosInstrutor, struct turma turmas, qtdRegistrosTurma){
+	resultBusca = 0;
+	
+	cout << "=== TODAS AS MATRICULAS ==="
+	
+	for(int i = 0; i < qtdRegistrosMatricula; i++){
+		
+		cout << "codigo"
+	}
+}*/
+
+
+/*void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
 	int resultBusca = 0;
 	int i = 0;
 	
@@ -1365,4 +1426,4 @@ void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int 
 		 
 		}
 				
-	}
+	}*/
