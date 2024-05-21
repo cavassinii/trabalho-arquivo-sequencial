@@ -366,7 +366,8 @@ int main() {
 				cout << "1. Incluir Turmas" << endl;
 				cout << "2. Mostrar Turmas" << endl;
 				cout << "3. Consultar Turma" << endl;
-				cout << "4. Voltar" << endl;
+				cout << "4. Consultar Turmas Completas" << endl;
+				cout << "5. Voltar" << endl;
 				cout << "\nEscolha uma operacao: ";
 				cin >> operacaoTurma;
 				
@@ -407,12 +408,21 @@ int main() {
                 	
 					break;
 				case 4:
+					
+					consultarTurmasCompletas(turmas, qtdRegistrosTurma, turmasCompletas, contTurmasCompletas, cursos, qtdRegistrosCurso, instrutores, qtdRegistrosInstrutor, cidades, qtdRegistrosCidade);
+					
+					cout << "Precione enter para continuar";
+					getch();
+					system("cls");
+					
+					break;
+				case 5:
 					break;
 				default:
 					system("cls");
 					cout << "Opcao invalida, tente novamente.\n" << endl;
 				}
-			} while (operacaoTurma != 4);
+			} while (operacaoTurma != 5);
             
             break;
         case 6:
@@ -475,6 +485,14 @@ int main() {
             break;
         }
     } while (opcao != 7);
+    
+    cout << "\n\nCodigo das turmas completas:\n\n" << endl;
+    for(int i = 0; i < contTurmasCompletas; i++){
+    	
+    	cout << "V[" << i+1 << "]: " << turmasCompletas[i] << endl;
+	}
+	
+	cout << "\n\ncontTurmasCompletas: " << contTurmasCompletas; 
 
     return 0;
 }
@@ -946,7 +964,7 @@ void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct alun
     contA = k;
 }
 
-void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompletas[], int contTurmasCompletas) {
+void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompletas[], int &contTurmasCompletas) {
     int i = 0;
 
     cout << "\nCadastro de Turmas\n";
@@ -1172,7 +1190,7 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
 							if(vetorTurmas[resultBusca].totalParticipantes + 1 <= vetorTurmas[resultBusca].quantMaxParticipantes){
 								vetorTurmas[resultBusca].totalParticipantes++;
 								if(vetorTurmas[resultBusca].totalParticipantes == vetorTurmas[resultBusca].quantMaxParticipantes){
-									turmasCompletas[contTurmasCompletas] = vetorTurmas[resultBusca].codigo;
+									turmasCompletas[contTurmasCompletas] = v[i].codigoTurma;
 									contTurmasCompletas++;
 								}
  		                    	resultBusca = buscaBinariaInstrutor(vetorInstrutores, vetorTurmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
@@ -1328,13 +1346,13 @@ void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso c
 
 void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
 	int resultBusca = 0;
-	int aux = 0;
+	//int aux = 0;
 	cout << "\n\nTurmas Completas: \n\n";
 		
-	for(int i = 0; i < (contTurmasCompletas - 1); i++){
-		aux = turmasCompletas[i];
-		cout << "Codigo: " << turmas[aux].codigo << endl;
-		resultBusca = buscaBinariaCurso(cursos, turmas[aux].codigoCurso, qtdRegistrosCurso);
+	for(int i = 0; i < contTurmasCompletas; i++){
+		//aux = turmasCompletas[i];
+		cout << "Codigo: " << turmasCompletas[i] << endl;
+		resultBusca = buscaBinariaCurso(cursos, turmas[turmasCompletas[i]].codigoCurso, qtdRegistrosCurso);
 		cout << "Curso: " << cursos[resultBusca].descricao << endl;
 		resultBusca = buscaBinariaInstrutor(instrutores, turmas[turmasCompletas[i]].codigoInstrutor, qtdRegistrosInstrutor);
 		cout << "Instrutor: " << instrutores[resultBusca].nome << " | " << cidades[instrutores[resultBusca].codigoCidade].nome << " " << cidades[instrutores[resultBusca].codigoCidade].uf << endl;
