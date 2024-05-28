@@ -62,12 +62,14 @@ void mostrarCidades(cidade vetor[], int qtdRegistros);
 //FUNÇÕES TABELA CURSO
 void leituraCurso(struct curso v[], int &qtdRegistros);
 void mostrarCursos(curso vetor[], int qtdRegistros);
+int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos);
 
 //FUNÇÕES TABELA INSTRUTOR
 void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade);
 int buscaBinariaInstrutor(instrutor vetor[], int cod, int qtdRegistros);
 void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], int contT, struct instrutor A[], int &contA);
 void mostrarInstrutores(instrutor vetor[], int qtdRegistros);
+bool buscaSerialInstrutor(instrutor vetorInstrutor[], int cod, int cont);
 
 
 //FUNÇÕES TABELA ALUNO
@@ -77,6 +79,8 @@ void inclusaoAluno(struct aluno S[], int contS, struct aluno T[], int contT, str
 void leituraExclusaoAluno(int TExclusao[], int &contTExclusao);
 void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct aluno A[], int &contA);
 void mostrarAlunos(aluno vetor[], int qtdRegistros);
+bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont);
+bool buscaSerialExclusaoAluno(int TExclusao[], int cod, int cont);
 
 //FUNÇÕES TABELA TURMA
 void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompleta[], int &contTurmasCompletas);
@@ -86,6 +90,7 @@ int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros);
 void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor);
 void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade);
 void ordenarCodigos(int v[], int qtdRegistros);
+bool buscaSerialTurma(turma vetorTurma[], int cod, int cont);
 
 //FUNÇÕES TABELA MATRICULAS
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma, int turmasCompletas[], int &contTurmasCompletas);
@@ -141,18 +146,7 @@ int main() {
 	 int contSMatricula = 0;
     
     
-    
-    /*CIDADES: leitura
 
-	CURSOS: leitura
-
-	INSTRUTORES: inclusão
-	
-	ALUNOS: inclusão, exclusão
-
-	TURMAS: inclusão, mostrarUm, mostrarCompletas
-
-	MATRICULAS: inclusão*/
 
     do {
         system("cls");
@@ -224,7 +218,7 @@ int main() {
             	case 2:
             		mostrarCursos(cursos, qtdRegistrosCurso);
                 	
-                	cout << "Precione enter para continuar";
+                	cout << "Pressione enter para continuar";
                 	getch();
                 	system("cls");
             
@@ -343,7 +337,7 @@ int main() {
                 	
                 	mostrarAlunos(alunos, qtdRegistrosAluno);
                 	
-                	cout << "Precione enter para continuar";
+                	cout << "Pressione enter para continuar";
                 	getch();
                 	system("cls");
                 	
@@ -397,7 +391,7 @@ int main() {
 					
                 	mostrarTurmas(turmas, qtdRegistrosTurma);
                 	
-                	cout << "Precione enter para continuar";
+                	cout << "Pressione enter para continuar";
                 	getch();
                 	system("cls");
 					
@@ -413,7 +407,7 @@ int main() {
 					
 					consultarTurmasCompletas(turmas, qtdRegistrosTurma, turmasCompletas, contTurmasCompletas, cursos, qtdRegistrosCurso, instrutores, qtdRegistrosInstrutor, cidades, qtdRegistrosCidade);
 					
-					cout << "\nPrecione enter para continuar";
+					cout << "\nPressione enter para continuar";
 					getch();
 					system("cls");
 					
@@ -464,7 +458,7 @@ int main() {
 					
                 	mostrarMatriculas(matriculas, qtdRegistrosMatricula);
                 	
-                	cout << "Precione enter para continuar";
+                	cout << "Pressione enter para continuar";
                 	getch();
                 	
                 	system("cls");
@@ -474,7 +468,7 @@ int main() {
 					
 					exibirMatriculas(matriculas, qtdRegistrosMatricula, alunos, qtdRegistrosAluno, cursos, qtdRegistrosCurso, instrutores, qtdRegistrosInstrutor, turmas, qtdRegistrosTurma);
 					
-                	cout << "\nPrecione enter para continuar";
+                	cout << "\nPressione enter para continuar";
                 	getch();
                 	
                 	system("cls");
@@ -517,203 +511,9 @@ int main() {
     return 0;
 }
 
-int buscaBinariaCidade(cidade vetor[], int cod, int qtdRegistros) {
-    
-    int i = 0, f = qtdRegistros - 1;
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-    if (cod == vetor[m].codigo){
-      return m;
-    }
-    else
-       return -1;
-
-}
-
-int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos) {
-
- 
-    int i = 0, f = qtdCursos - 1;
-    
-    
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetorCurso[m].codigo; m = (i + f) / 2){
-        if (cod > vetorCurso[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-    	
-    	
-    	if (cod == vetorCurso[m].codigo){
-      		return m;
-	}
-
-    
-    else
-       return -1;
-
-}
-
-int buscaBinariaAluno(aluno vetor[], int cod, int qtdRegistros){
-	
-	if(qtdRegistros == 0){
-		return -1;
-	}
-	
-    int i = 0, f = qtdRegistros - 1;
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-
-    	if (cod == vetor[m].codigo){
-    	
-      	return m;
-    }
-
-    
-    else
-       return -1;
-
-}
 
 
-int buscaBinariaInstrutor(instrutor vetor[], int cod, int qtdRegistros){
-	
-	if(qtdRegistros == 0){
-		return -1;
-	}
-	
-    int i = 0, f = qtdRegistros - 1;
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-
-    	if (cod == vetor[m].codigo){
-    	
-      	return m;
-    }
-
-    
-    else
-       return -1;
-
-}
-
-int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros){
-	
-	if(qtdRegistros == 0){
-		return -1;
-	}
-	
-    int i = 0, f = qtdRegistros - 1;
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-
-    	if (cod == vetor[m].codigo){
-    	
-      	return m;
-    }
-
-    
-    else
-       return -1;
-
-}
-
-int buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros){
-	
-	if(qtdRegistros == 0){
-		return -1;
-	}
-	
-    int i = 0, f = qtdRegistros - 1;
-    int m = (i + f) / 2;
-    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
-        if (cod > vetor[m].codigo)
-            i = m + 1;
-        else
-            f = m - 1;
-    }
-
-    	if (cod == vetor[m].codigo){
-    	
-      	return m;
-    }
-
-    
-    else
-       return -1;
-
-}
-
-bool buscaSerialInstrutor(instrutor vetorInstrutor[], int cod, int cont) {
-    int i = 0;
-    for (; i < cont; i++) {
-        if (cod == vetorInstrutor[i].codigo) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool buscaSerialMatricula(matricula vetor[], int cod, int cont) {
-    int i = 0;
-    for (; i < cont; i++) {
-        if (cod == vetor[i].codigo) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont) {
-    int i = 0;
-    for (; i < cont; i++) {
-        if (cod == vetorAluno[i].codigo) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool buscaSerialTurma(turma vetorTurma[], int cod, int cont) {
-    int i = 0;
-    for (; i < cont; i++) {
-        if (cod == vetorTurma[i].codigo) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool buscaSerialExclusaoAluno(int TExclusao[], int cod, int cont) {
-    int i = 0;
-    for (; i < cont; i++) {
-        if (cod == TExclusao[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+//FUNÇÕES TABELA CIDADE
 
 void leituraCidade(struct cidade v[], int &qtdRegistros) {
     int i = 0;
@@ -739,6 +539,39 @@ void leituraCidade(struct cidade v[], int &qtdRegistros) {
 	}else
 		qtdRegistros = i - 1;
 }
+
+int buscaBinariaCidade(cidade vetor[], int cod, int qtdRegistros) {
+    
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if (cod == vetor[m].codigo){
+      return m;
+    }
+    else
+       return -1;
+
+}
+
+void mostrarCidades(cidade vetorCidades[], int qtdCidades) {
+    cout << "=== CIDADES ===" << endl;
+    for (int i = 0; i < qtdCidades; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorCidades[i].codigo << endl;
+        cout << "Nome: " << vetorCidades[i].nome << endl;
+        cout << "UF: " << vetorCidades[i].uf << endl;
+        cout << endl;
+    }
+}
+
+
+
+//FUNÇÕES TABELA CURSO
 
 void leituraCurso(struct curso v[], int &qtdRegistros) {
     int i = 0;
@@ -767,6 +600,46 @@ void leituraCurso(struct curso v[], int &qtdRegistros) {
 		qtdRegistros = i - 1;
     
 }
+
+void mostrarCursos(curso vetorCursos[], int qtdCursos) {
+    cout << "=== CURSOS ===" << endl;
+    for (int i = 0; i < qtdCursos; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorCursos[i].codigo << endl;
+        cout << "Descricao: " << vetorCursos[i].descricao << endl;
+        cout << "Valor por aula: R$" << vetorCursos[i].valorAula << endl;
+        cout << endl;
+    }
+}
+
+int buscaBinariaCurso(curso vetorCurso[], int cod, int qtdCursos) {
+
+ 
+    int i = 0, f = qtdCursos - 1;
+    
+    
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetorCurso[m].codigo; m = (i + f) / 2){
+        if (cod > vetorCurso[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    	
+    	
+    	if (cod == vetorCurso[m].codigo){
+      		return m;
+	}
+
+    
+    else
+       return -1;
+
+}
+
+
+
+//FUNÇÕES TABELA INSTRUTOR
 
 void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade) {
     int i = 0;
@@ -815,6 +688,42 @@ void leituraInstrutor(struct instrutor v[], int &qtdRegistros, struct instrutor 
 		qtdRegistros = i - 1;
 }
 
+int buscaBinariaInstrutor(instrutor vetor[], int cod, int qtdRegistros){
+	
+	if(qtdRegistros == 0){
+		return -1;
+	}
+	
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+
+    	if (cod == vetor[m].codigo){
+    	
+      	return m;
+    }
+
+    
+    else
+       return -1;
+
+}
+
+bool buscaSerialInstrutor(instrutor vetorInstrutor[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == vetorInstrutor[i].codigo) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], int contT, struct instrutor A[], int &contA) {
     int i = 0, j = 0, k = 0; // i (contador de S) j (contador de T) k (contador de A)
     for (; i < contS && j < contT; k++) {
@@ -851,6 +760,22 @@ void inclusaoInstrutor(struct instrutor S[], int contS, struct instrutor T[], in
     contA = k;
 
 }
+
+void mostrarInstrutores(instrutor vetorInstrutores[], int qtdInstrutores) {
+    cout << "=== INSTRUTORES ===" << endl;
+    for (int i = 0; i < qtdInstrutores; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorInstrutores[i].codigo << endl;
+        cout << "Nome: " << vetorInstrutores[i].nome << endl;
+        cout << "Endereco: " << vetorInstrutores[i].endereco << endl;
+        cout << "Codigo da Cidade: " << vetorInstrutores[i].codigoCidade << endl;
+        cout << endl;
+    }
+}
+
+
+
+//FUNÇÕES TABELA ALUNO
 
 void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct cidade vetorCidades[], int qtdRegistrosCidade){
 	int i = 0;
@@ -897,6 +822,33 @@ void leituraAluno(struct aluno v[], int &qtdRegistros, struct aluno vetorAlunos[
         	qtdRegistros = i - 1;	
 	}else
 		qtdRegistros = i - 1;
+
+}
+
+
+int buscaBinariaAluno(aluno vetor[], int cod, int qtdRegistros){
+	
+	if(qtdRegistros == 0){
+		return -1;
+	}
+	
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+
+    	if (cod == vetor[m].codigo){
+    	
+      	return m;
+    }
+
+    
+    else
+       return -1;
 
 }
 
@@ -983,6 +935,42 @@ void exclusaoAluno (struct aluno S[], int contS, int T[], int contT, struct alun
     }
     contA = k;
 }
+
+void mostrarAlunos(aluno vetorAlunos[], int qtdAlunos) {
+    cout << "=== ALUNOS ===" << endl;
+    for (int i = 0; i < qtdAlunos; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetorAlunos[i].codigo << endl;
+        cout << "Nome: " << vetorAlunos[i].nome << endl;
+        cout << "Endereco: " << vetorAlunos[i].endereco << endl;
+        cout << "Codigo da Cidade: " << vetorAlunos[i].codigoCidade << endl;
+        cout << endl;
+    }
+}
+
+bool buscaSerialAluno(aluno vetorAluno[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == vetorAluno[i].codigo) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool buscaSerialExclusaoAluno(int TExclusao[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == TExclusao[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+//FUNÇÕES TABELA TURMA
 
 void leituraTurma(struct turma v[], int &qtdRegistros, struct turma vetorTurmas[], int qtdRegistrosTurma, struct curso vetorCursos[], int qtdRegistrosCurso, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct cidade vetorCidades[], int qtdRegistrosCidade, int turmasCompletas[], int &contTurmasCompletas) {
     int i = 0;
@@ -1100,54 +1088,6 @@ void inclusaoTurma(struct turma S[], int contS, struct turma T[], int contT, str
     
 }
 
-//FUNÇÕES MOSTRAR
-
-void mostrarCidades(cidade vetorCidades[], int qtdCidades) {
-    cout << "=== CIDADES ===" << endl;
-    for (int i = 0; i < qtdCidades; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo: " << vetorCidades[i].codigo << endl;
-        cout << "Nome: " << vetorCidades[i].nome << endl;
-        cout << "UF: " << vetorCidades[i].uf << endl;
-        cout << endl;
-    }
-}
-
-void mostrarCursos(curso vetorCursos[], int qtdCursos) {
-    cout << "=== CURSOS ===" << endl;
-    for (int i = 0; i < qtdCursos; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo: " << vetorCursos[i].codigo << endl;
-        cout << "Descricao: " << vetorCursos[i].descricao << endl;
-        cout << "Valor por aula: R$" << vetorCursos[i].valorAula << endl;
-        cout << endl;
-    }
-}
-
-void mostrarInstrutores(instrutor vetorInstrutores[], int qtdInstrutores) {
-    cout << "=== INSTRUTORES ===" << endl;
-    for (int i = 0; i < qtdInstrutores; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo: " << vetorInstrutores[i].codigo << endl;
-        cout << "Nome: " << vetorInstrutores[i].nome << endl;
-        cout << "Endereco: " << vetorInstrutores[i].endereco << endl;
-        cout << "Codigo da Cidade: " << vetorInstrutores[i].codigoCidade << endl;
-        cout << endl;
-    }
-}
-
-void mostrarAlunos(aluno vetorAlunos[], int qtdAlunos) {
-    cout << "=== ALUNOS ===" << endl;
-    for (int i = 0; i < qtdAlunos; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo: " << vetorAlunos[i].codigo << endl;
-        cout << "Nome: " << vetorAlunos[i].nome << endl;
-        cout << "Endereco: " << vetorAlunos[i].endereco << endl;
-        cout << "Codigo da Cidade: " << vetorAlunos[i].codigoCidade << endl;
-        cout << endl;
-    }
-}
-
 void mostrarTurmas(turma vetorTurmas[], int qtdTurmas) {
     cout << "=== TURMAS ===" << endl;
     for (int i = 0; i < qtdTurmas; i++) {
@@ -1161,22 +1101,144 @@ void mostrarTurmas(turma vetorTurmas[], int qtdTurmas) {
     }
 }
 
-void mostrarMatriculas(matricula vetor[], int qtdRegistros) {
-    cout << "=== MATRICULAS ===" << endl;
-    for (int i = 0; i < qtdRegistros; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo: " << vetor[i].codigo << endl;
-        cout << "Codigo do Aluno: " << vetor[i].codigoAluno << endl;
-        cout << "Codigo do Turma: " << vetor[i].codigoTurma << endl;
-        cout << "Quantidade de Aulas: " << vetor[i].quantidadeAulas << endl;
-        cout << "Valor Total: " << vetor[i].valorTotal << endl;
-        cout << endl;
+int buscaBinariaTurma(turma vetor[], int cod, int qtdRegistros){
+	
+	if(qtdRegistros == 0){
+		return -1;
+	}
+	
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+
+    	if (cod == vetor[m].codigo){
+    	
+      	return m;
+    }
+
+    
+    else
+       return -1;
+
+}
+
+void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor){
+	int cod = 0;
+	int resultBusca = 0;
+	
+	for(int y = 1; y != -1;){
+		cout << "Digite o codigo da turma que quer consultar: ";
+		cin >> cod;
+		cin.ignore();
+		
+		if(cod != 0){
+			if(buscaBinariaTurma(turmas, cod, qtdRegistrosTurma) != -1){
+			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);	
+			resultBusca = buscaBinariaInstrutor(instrutores, turmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
+			
+			cout << "\nNome do instrutor: " << instrutores[resultBusca].nome << endl;
+			
+			resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
+			
+			cout << "Cidade do instrutor: " << cidades[resultBusca].nome << endl;
+			
+			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);
+			resultBusca = buscaBinariaCurso(cursos, turmas[resultBusca].codigoCurso, qtdRegistrosCurso);
+			
+			cout << "Curso: " << cursos[resultBusca].descricao << endl;
+			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);
+			cout << "Total de participantes: " << turmas[resultBusca].totalParticipantes;
+			y = -1;
+			
+			cout << "\n\nPressione enter para continuar";
+            getch();
+			
+		}
+		else
+			cout << "\nCodigo da turma nao encontrado, tente novamente\n\n";
+
+		}
+		else
+			y = -1;
+	
+	}
+	
+
+	
+	
+}
+
+void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
+    
+    ordenarCodigos(turmasCompletas, contTurmasCompletas);
+    
+	int resultBusca = 0;
+    
+    cout << "\n\nTurmas Completas: \n";
+            
+    for(int i = 0; i < contTurmasCompletas; i++){
+        //int codigoTurma = turmasCompletas[i];
+        resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
+        
+        cout << "\nCodigo: " << turmasCompletas[i] << endl;
+        resultBusca = buscaBinariaCurso(cursos, turmas[resultBusca].codigoCurso, qtdRegistrosCurso);
+        cout << "Curso: " << cursos[resultBusca].descricao << endl;
+
+        resultBusca = buscaBinariaInstrutor(instrutores, turmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
+        cout << "Instrutor: " << instrutores[resultBusca].nome;
+            
+        resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
+        cout << " | " << cidades[resultBusca].nome << " " << cidades[resultBusca].uf << endl;
+            
+    	resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
+        cout << "Total de Participantes: " << turmas[resultBusca].totalParticipantes << endl;
+        cout << "Maximo de Participantes: " << turmas[resultBusca].quantMaxParticipantes << endl;
+     
     }
 }
+
+void ordenarCodigos(int v[], int qtdRegistros){
+	for(int i = 0; i < qtdRegistros; i++){
+		int menorIndice = i;
+		
+		for(int j = i + 1; j < qtdRegistros; j++){
+			if(v[j] < v[menorIndice]){
+				menorIndice = j;
+			}
+		}
+		
+		if(menorIndice != i){
+			int aux = 0;
+			aux = v[i];
+			v[i] = v[menorIndice];
+			v[menorIndice] = aux; 
+		}
+	}
+}
+
+bool buscaSerialTurma(turma vetorTurma[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == vetorTurma[i].codigo) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+//FUNÇÕES TABELA MATRICULAS
 
 void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula vetorMatriculas[], int qtdRegistrosMatricula, struct cidade vetorCidades[], int qtdRegistrosCidade, struct instrutor vetorInstrutores[], int qtdRegistrosInstrutor, struct curso vetorCursos[], int qtdRegistrosCurso, struct aluno vetorAlunos[], int qtdRegistrosAluno, struct turma vetorTurmas[], int qtdRegistrosTurma, int turmasCompletas[], int &contTurmasCompletas) {
     int i = 0;
     int resultBusca = 0;
+    int resultBuscaCurso = 0;
     bool teste = true;
     cout << "\nCadastro de Matriculas\n";
     for (int saida = 1; i < TMMatriculas && saida == 1; i++) {
@@ -1216,14 +1278,14 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
  		                    	resultBusca = buscaBinariaInstrutor(vetorInstrutores, vetorTurmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
                     			cout << "  -Instrutor: " << vetorInstrutores[resultBusca].nome;
                     		
-                    			resultBusca = buscaBinariaCurso(vetorCursos, vetorTurmas[resultBusca].codigoCurso, qtdRegistrosCurso);
-                    			cout << "\n  -Curso: " << vetorCursos[resultBusca].descricao;
-                    			cout << "\n  -Valor por aula: R$" << vetorCursos[resultBusca].valorAula << endl;
+                    			resultBuscaCurso = buscaBinariaCurso(vetorCursos, vetorTurmas[resultBusca].codigoCurso, qtdRegistrosCurso);
+                    			cout << "\n  -Curso: " << vetorCursos[resultBuscaCurso].descricao;
+                    			cout << "\n  -Valor por aula: R$" << vetorCursos[resultBuscaCurso].valorAula << endl;
                     			
                    				cout << "Quantidade de aulas: ";
                     			cin >> v[i].quantidadeAulas;
                     
-                    			v[i].valorTotal = v[i].quantidadeAulas * vetorCursos[resultBusca].valorAula;
+                    			v[i].valorTotal = v[i].quantidadeAulas * vetorCursos[resultBuscaCurso].valorAula;
                     
                     			cout << " -Total a pagar: R$" << v[i].valorTotal;
                     			
@@ -1234,7 +1296,7 @@ void leituraMatricula(struct matricula v[], int &qtdRegistros, struct matricula 
 							}
 							  else{
 							  	
-							  cout << "\n*Matricula nao incluida, turma cheia. Precione enter para voltar*";
+							  cout << "\n*Matricula nao incluida, turma cheia. Pressione enter para voltar*";
 							  y = -1;
 							  teste = false;
 							  i--;
@@ -1318,98 +1380,53 @@ void inclusaoMatricula(struct matricula S[], int contS, struct matricula T[], in
     
 }
 
-void consultarTurma(struct turma turmas[], int qtdRegistrosTurma, struct curso cursos[], int qtdRegistrosCurso, struct cidade cidades[], int qtdRegistrosCidade, struct instrutor instrutores[], int qtdRegistrosInstrutor){
-	int cod = 0;
-	int resultBusca = 0;
-	
-	for(int y = 1; y != -1;){
-		cout << "Digite o codigo da turma que quer consultar: ";
-		cin >> cod;
-		cin.ignore();
-		
-		if(cod != 0){
-			if(buscaBinariaTurma(turmas, cod, qtdRegistrosTurma) != -1){
-			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);	
-			resultBusca = buscaBinariaInstrutor(instrutores, turmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
-			
-			cout << "\nNome do instrutor: " << instrutores[resultBusca].nome << endl;
-			
-			resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
-			
-			cout << "Cidade do instrutor: " << cidades[resultBusca].nome << endl;
-			
-			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);
-			resultBusca = buscaBinariaCurso(cursos, turmas[resultBusca].codigoCurso, qtdRegistrosCurso);
-			
-			cout << "Curso: " << cursos[resultBusca].descricao << endl;
-			resultBusca = buscaBinariaTurma(turmas, cod, qtdRegistrosTurma);
-			cout << "Total de participantes: " << turmas[resultBusca].totalParticipantes;
-			y = -1;
-			
-			cout << "\n\nPrecione enter para continuar";
-            getch();
-			
-		}
-		else
-			cout << "\nCodigo da turma nao encontrado, tente novamente\n\n";
-
-		}
-		else
-			y = -1;
-	
-	}
-	
-
-	
-	
-}
-
-void consultarTurmasCompletas(struct turma turmas[], int qtdRegistrosTurma, int turmasCompletas[], int contTurmasCompletas, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct cidade cidades[], int qtdRegistrosCidade){
-    
-    ordenarCodigos(turmasCompletas, contTurmasCompletas);
-    
-	int resultBusca = 0;
-    
-    cout << "\n\nTurmas Completas: \n";
-            
-    for(int i = 0; i < contTurmasCompletas; i++){
-        //int codigoTurma = turmasCompletas[i];
-        resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
-        
-        cout << "\nCodigo: " << turmasCompletas[i] << endl;
-        resultBusca = buscaBinariaCurso(cursos, turmas[resultBusca].codigoCurso, qtdRegistrosCurso);
-        cout << "Curso: " << cursos[resultBusca].descricao << endl;
-
-        resultBusca = buscaBinariaInstrutor(instrutores, turmas[resultBusca].codigoInstrutor, qtdRegistrosInstrutor);
-        cout << "Instrutor: " << instrutores[resultBusca].nome;
-            
-        resultBusca = buscaBinariaCidade(cidades, instrutores[resultBusca].codigoCidade, qtdRegistrosCidade);
-        cout << " | " << cidades[resultBusca].nome << " " << cidades[resultBusca].uf << endl;
-            
-    	resultBusca = buscaBinariaTurma(turmas, turmasCompletas[i], qtdRegistrosTurma);
-        cout << "Total de Participantes: " << turmas[resultBusca].totalParticipantes << endl;
-        cout << "Maximo de Participantes: " << turmas[resultBusca].quantMaxParticipantes << endl;
-     
+bool buscaSerialMatricula(matricula vetor[], int cod, int cont) {
+    int i = 0;
+    for (; i < cont; i++) {
+        if (cod == vetor[i].codigo) {
+            return false;
+        }
     }
+    return true;
 }
 
-void ordenarCodigos(int v[], int qtdRegistros){
-	for(int i = 0; i < qtdRegistros; i++){
-		int menorIndice = i;
-		
-		for(int j = i + 1; j < qtdRegistros; j++){
-			if(v[j] < v[menorIndice]){
-				menorIndice = j;
-			}
-		}
-		
-		if(menorIndice != i){
-			int aux = 0;
-			aux = v[i];
-			v[i] = v[menorIndice];
-			v[menorIndice] = aux; 
-		}
+int buscaBinariaMatricula(matricula vetor[], int cod, int qtdRegistros){
+	
+	if(qtdRegistros == 0){
+		return -1;
 	}
+	
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetor[m].codigo; m = (i + f) / 2){
+        if (cod > vetor[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+
+    	if (cod == vetor[m].codigo){
+    	
+      	return m;
+    }
+
+    
+    else
+       return -1;
+
+}
+
+void mostrarMatriculas(matricula vetor[], int qtdRegistros) {
+    cout << "=== MATRICULAS ===" << endl;
+    for (int i = 0; i < qtdRegistros; i++) {
+        cout << "**Registro " << i + 1 << "**" << endl;
+        cout << "Codigo: " << vetor[i].codigo << endl;
+        cout << "Codigo do Aluno: " << vetor[i].codigoAluno << endl;
+        cout << "Codigo do Turma: " << vetor[i].codigoTurma << endl;
+        cout << "Quantidade de Aulas: " << vetor[i].quantidadeAulas << endl;
+        cout << "Valor Total: " << vetor[i].valorTotal << endl;
+        cout << endl;
+    }
 }
 
 void exibirMatriculas(struct matricula matriculas[], int qtdRegistrosMatricula, struct aluno alunos[], int qtdRegistrosAluno, struct curso cursos[], int qtdRegistrosCurso, struct instrutor instrutores[], int qtdRegistrosInstrutor, struct turma turmas[], int qtdRegistrosTurma){
@@ -1431,4 +1448,5 @@ void exibirMatriculas(struct matricula matriculas[], int qtdRegistrosMatricula, 
 				
 	}
 }
+
 
